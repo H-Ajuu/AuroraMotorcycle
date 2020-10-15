@@ -17,6 +17,7 @@ void MainWindow::on_gameStart_clicked()
 {
     GameView *gv=new GameView();
     gv->show();
+    this->hide();
 }
 
 void MainWindow::on_gameDescription_clicked()
