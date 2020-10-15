@@ -16,7 +16,6 @@ MainWindow::~MainWindow()
 void MainWindow::on_gameStart_clicked()
 {
     GameView *gv=new GameView();
-    gv->setAttribute(Qt::WA_DeleteOnClose,true);
     gv->show();
 }
 

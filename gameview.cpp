@@ -6,6 +6,7 @@ GameView::GameView(QWidget *parent) :
     ui(new Ui::GameView)
 {
     ui->setupUi(this);
+    this->setAttribute(Qt::WA_DeleteOnClose,true);
     x1=200;
     y1=350;
     x2=600;
@@ -29,15 +30,10 @@ GameView::~GameView()
 }
 
 void GameView::paintEvent(QPaintEvent *event){
-    Q_UNUSED(event);
     QPainter painter1(this);
     QPainter painter2(this);
-    painter1.setPen(QPen(QColor(255, 0, 0)));
-    painter2.setPen(QPen(QColor(0, 0, 255)));
-    painter1.setBrush(QColor(255, 0, 0));
-    painter2.setBrush(QColor(0, 0, 255));
-    painter1.drawRect(x1,y1,10,10);
-    painter2.drawRect(x2,y2,10,10);
+    painter1.fillRect(x1,y1,10,10,QBrush(QColor(255,0,0)));
+    painter2.fillRect(x2,y2,10,10,QBrush(QColor(0,0,255)));
 }
 
 void GameView::on_timer_timeout(){
@@ -53,20 +49,31 @@ void GameView::on_timer_timeout(){
     case 2:x2+=10;break;
     case 3:y2+=10;break;
     }
+    int finish=0;
     if(x1<0||x1>=800||y1<0||y1>=700||block[x1/10][y1/10]==true){
         fTimer->stop();
-        QMessageBox::information(this, "游戏结束", "2P Lose!",QMessageBox::Ok,QMessageBox::NoButton);
-        this->close();
+        finish+=1;
     }
     if(x2<0||x2>=800||y2<0||y2>=700||block[x2/10][y2/10]==true){
         fTimer->stop();
-        QMessageBox::information(this, "游戏结束", "1P Lose!",QMessageBox::Ok,QMessageBox::NoButton);
-        this->close();
+        finish+=2;
     }
-    block[x1/10][y1/10]=true;
-    block[x2/10][y2/10]=true;
-    update(x1,y1,10,10);
-    update(x2,y2,10,10);
+    switch (finish) {
+    case 0:block[x1/10][y1/10]=true;
+        block[x2/10][y2/10]=true;
+        update(x1,y1,10,10);
+        update(x2,y2,10,10);
+        break;
+    case 1:QMessageBox::information(this, "游戏结束", "2P Win!",QMessageBox::Ok,QMessageBox::NoButton);
+        this->close();
+        break;
+    case 2:QMessageBox::information(this, "游戏结束", "1P Win!",QMessageBox::Ok,QMessageBox::NoButton);
+        this->close();
+        break;
+    case 3:QMessageBox::information(this, "游戏结束", "平局",QMessageBox::Ok,QMessageBox::NoButton);
+        this->close();
+        break;
+    }
 }
 
 void GameView::keyReleaseEvent(QKeyEvent *event){
