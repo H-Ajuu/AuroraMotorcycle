@@ -65,13 +65,13 @@ void GameView::on_timer_timeout(){
         update(x2,y2,10,10);
         break;
     case 1:QMessageBox::information(this, "游戏结束", "2P Win!",QMessageBox::Ok,QMessageBox::NoButton);
-        this->close();
+        exit(0);
         break;
     case 2:QMessageBox::information(this, "游戏结束", "1P Win!",QMessageBox::Ok,QMessageBox::NoButton);
-        this->close();
+        exit(0);
         break;
     case 3:QMessageBox::information(this, "游戏结束", "平局",QMessageBox::Ok,QMessageBox::NoButton);
-        this->close();
+        exit(0);
         break;
     }
 }
